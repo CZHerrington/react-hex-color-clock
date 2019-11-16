@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
+import {} from 'react-control-panel';
 import './HexClock.css';
-import { thisTypeAnnotation } from '@babel/types';
 
 // utilities //
+const toHex = (i) => parseInt(i, 10).toString(16);
+
+const toColorCode = (hex) => '#' + hex;
+
 function updateDate() {
     const date = new Date();
     let [h, m, s] = [date.getHours(), date.getMinutes(), date.getSeconds()];
     if (h < 10) {h = "0" + h};
     if (m < 10) {m = "0" + m};
     if (s < 10) {s = "0" + s};
-    let dateString =  `${s}${m}${h}`;
-    console.log(dateString);
-    
-    return dateString;
+    return `${h}${s}${m}`;
 }
-const toHex = (i) => parseInt(i, 10).toString(16);
-const toColorCode = (hex) => '#' + hex;
+
 function hexNormalize (str) {
     var strNorm = str;
     let i = 6 - str.length;
@@ -56,16 +56,16 @@ export default class HexClock extends Component {
         // })
     }
 
-    _setBackground() {
-        console.count('setColor()');
+    setBackground() {
         const { int } = this.state;
+        console.count('setBackground()');
         const hex = hexNormalize(toHex(int));
         this.setState({backgroundColor: hex});
     }
 
     setColor(int) {
         this.setState({int});
-        this._setBackground();
+        this.setBackground();
     }
 
     debounceSetColor(number) {
@@ -73,7 +73,7 @@ export default class HexClock extends Component {
         clearInterval(this.dateIntervalRef);
         this.setState({
             int: number,
-            dateIntervalRef: setInterval(this._setBackground, 1000)
+            dateIntervalRef: setInterval(this.setBackground, 1000)
         });
     }
 
@@ -95,6 +95,9 @@ export default class HexClock extends Component {
         const hexColor = hexNormalize(toHex(int));
         console.log('render > ', this.state);
 
+        const compliment = (hex) => '#' + ((parseInt('FFFFFF', 16) - parseInt(hex.slice(1), 16)).toString(16))
+        console.log('compliment: ' + compliment(backgroundColor))
+
         return (
             <header
                 className="Hex-header"
@@ -106,12 +109,15 @@ export default class HexClock extends Component {
                 <span
                     className="control-trigger"
                     onClick={this.toggleControls}
+                    style={{color: compliment(backgroundColor)}}
                 >
                     {showControls ? 'close controls' : 'open controls'}
                 </span>
                 <span
                     className="hex-display"
-                    style={{visibility: showControls ? 'visible' : 'hidden'}}
+                    style={{
+                        visibility: showControls ? 'visible' : 'hidden',
+                    }}
                 >
                     <p><strong>color:</strong> {int}[base10] / {hexColor}[base16]</p>
                     <p><strong>time:</strong> {toHex(int)}[base16]</p>

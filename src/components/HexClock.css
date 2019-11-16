@@ -19,12 +19,20 @@
   color: rgba(255, 255, 255, 0.692);
 }
 
+@media screen and (max-width: 850px) {
+  .hex-display {
+    padding: 10px;
+    min-width: 100vw;
+    border-radius: 5px;
+  }
+}
+
 .hex-display {
-  min-width: 35vw;
-  transition: all 0.45s;
+  transition: color 0.15s, background-color 0.25s;
+  width: 45vw;
+    border-radius: 5px;
   padding: 10px;
   margin-top: 50px;
-  border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.26);
   text-align: left;
   color: rgba(255, 255, 255, 0.637);
@@ -33,7 +41,7 @@
 }
 
 .hex-display:hover {
-  transition: all 0.45s;
+  transition: color 0.15s, background-color 0.25s;
   color: white;
   background-color: rgba(0, 0, 0, 0.596);
 }
